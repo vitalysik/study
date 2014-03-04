@@ -1,32 +1,29 @@
-<?php include "bd.php";?>
-<?php session_start(); ?>
-<?php include "form.php";?>
+<?php include "bd.php";
+session_start();
+include "form_aut.php";
+include "functions.php";?>
+<?php if (user_access('blocked')) {
+  page_user_blocked();} ?>
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
-	<title>Home</title>
+	<meta http-equiv = "content-type" content = "text/html; charset = utf8">
+	<title><?php print t('Home'); ?></title>
 	<link href="style.css" rel="stylesheet">
 </head>
 <body>
   <div class="wrapper">
   	<header class="header">
       <div class="aut">
-  		  <?php include "login.php"; ?>
-        <?php if (empty($_SESSION['user'])): ?>
-          <form action="" method="post">
-            Login:<br><input name="login" type="text" size="20" required><br>
-            Password:<br><input name="password" type="password" size="20" required><br>
-            <input name="submit" type="submit" value="Login">
-            <a href="reg.php">Registration</a>
-          </form>
-        <?php endif; ?>
+  		  <?php include "header_login.php"; ?>
       </div>
   	</header>
   <div class="menu">
 <?php include "menu.php"; ?>
   </div>
-  	<main class="content"></main>
+    <main class="content">
+      <img src="i/content.jpg" height="100%" width="100%">
+    </main>
   </div>
   <footer class="footer">
 

@@ -1,25 +1,22 @@
-<?php include "bd.php";?>
-<?php session_start()?>
-<?php include "form.php";?>
+<?php include "bd.php";
+session_start();
+include "form_aut.php";
+include "functions.php";
+?>
+<?php if (user_access('blocked')) {
+  page_user_blocked();} ?>
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Materials</title>
+  <title><?php print t('Materials')?></title>
   <link href="style.css" rel="stylesheet">
 </head>
 <body>
   <div class="wrapper">
     <header class="header">
 <div class="aut">
-        <?php include "login.php"; ?>
-        <?php if (empty($_SESSION['user'])): ?>
-          <form action="" method="post">
-            Login:<br><input name="login" type="text" size="20" required><br>
-            Password:<br><input name="password" type="password" size="20" required><br>
-            <input name="submit" type="submit" value="Login">
-          </form>
-        <?php endif; ?>
+        <?php include "header_login.php"; ?>
       </div>
     </header>
       <div class="menu">
@@ -29,7 +26,7 @@
       <div>
         <?php
         include("bd.php");
-        $lim = 5;
+        $lim = 10;
         $page = 1;
         if (!empty($_GET['page'])) {
           $page = $_GET['page'];
@@ -44,7 +41,9 @@
         }
         $start = $page * $lim - $lim;
         $query = $db->prepare("
-          SELECT `n`.`id`, `n`.`title`, `n`.`fullnews`, `n`.`date_news`, `u`.`login`
+          SELECT `n`.`id`, `n`.`title`, `n`.`fullnews`,
+          `n`.`title_ua`, `n`.`fullnews_ua`,
+          `n`.`date_news`, `u`.`login`, `u`.`uid`
           FROM news AS `n`
           INNER JOIN users AS `u` ON
             `u`.`uid` = `n`.`uid`
@@ -52,39 +51,46 @@
           LIMIT $start, $lim");
         $query->execute();
         ?>
+        <!-- View article. -->
         <?php while ($row = $query->fetch()): ?>
-          <?php if (!empty($_SESSION['user'])): ?>
+        <?php if (user_access('edit own article')
+         || user_access('edit any article')
+         || user_access('access article')
+         || !user_access('access article')) : ?>
             <h2>
-              <a href="view.php?id=<?php print $row['id']; ?>">
-                <?php print $row['title']; ?>
-              </a>
-            </h2>
+            <a href="view_materials.php?id=<?php print $row['id']; ?>">
+              <?php print current_language() == 'ua' ? $row['title_ua'] : $row['title']; ?>
+            </a>
+          </h2>
           <?php endif; ?>
-          <?php if (empty($_SESSION['user'])) : ?>
-            <h2><?php print $row['title']; ?></h2>
-          <?php endif; ?>
+
             <div>
-              <label>Date:</label>
+              <label><?php print t('Date')?>:</label>
               <span><?php print $row['date_news']; ?></span>
             </div>
             <div>
-              <label>Author:</label>
-              <span><?php print $row['login']; ?></span>
+              <label><?php print t('Author')?>:</label>
+              <span>
+                <a href="user.php?id=<?php print $row['uid']; ?>">
+                <?php print $row['login']; ?>
+                </a>
+              </span>
             </div>
             <?php
-            $lenght = 150;
-            $a = mb_substr($row['fullnews'], 0, $lenght);
-            if (mb_strlen($row['fullnews']) > $lenght) {
-                $a .= '...<a href="view.php?id=' . $row['id'] . '">Read More</a>';
-            }
+              $text = current_language() == 'ua' ? $row['fullnews_ua'] : $row['fullnews'];
+              $lenght = 150;
+              $body = mb_substr($text, 0, $lenght);
+              if (mb_strlen($text) > $lenght) {
+                $body .= '...<a href="view_materials.php?id=' . $row['id'] . '">' . t('Read more') . '</a>';
+              }
             ?>
-            <p><?php print $a; ?></p>
+            <p><?php print $body; ?></p>
           <hr>
         <?php endwhile; ?>
         <!-- Build pager.  -->
         <ul class="pager">
           <?php if ($page > 1): ?>
-            <li><a href="?page=<?php print $page - 1; ?>">Previous</a></li>
+            <li><a href="?page=<?php print $page - 1; ?>"><?php print t('Previous')?></a></li>
           <?php endif; ?>
           <?php for ($i = 1; $i <= $str; $i++): ?>
             <?php if ($i == $page) : ?>
@@ -94,7 +100,7 @@
             <?php endif; ?>
           <?php endfor; ?>
           <?php if ($page < $str) : ?>
-            <a href="?page=<?php print $page + 1; ?>">Next</a>
+            <a href="?page=<?php print $page + 1; ?>"><?php print t('Next')?></a>
           <?php endif; ?>
         </ul>
       </div>

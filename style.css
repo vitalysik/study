@@ -6,7 +6,7 @@ body {
 	font: 14px Arial, sans-serif;
 	width: 100%;
 	height: 100%;
-	background-image: url(ricepaper_v3.png);
+	background-image: url(i/ricepaper_v3.png);
 }
 .wrapper {
 	width: 1000px;
@@ -16,12 +16,11 @@ body {
 	height: 100%;
 }
 .header {
-	background-image: url(http://designeddestinations.com/wordpress/wp-content/uploads/2013/04/blue-waves-header.jpg);
+	background-image: url(i/header.jpg);
 	height: 150px;
-	position: relative;
 }
 .menu{
-	height: 18px;
+	height: 16px;
 	background: #666;
 }
 .content {
@@ -36,21 +35,15 @@ body {
 	position: relative;
 }
 .aut{
-	position: absolute;
-	right: 10px;
-	top: 10px;
+	float: right;
 }
 .aut a{
 	padding: 1px;
 	color: black;
 }
-.no_aut{
-	position: absolute;
-	top: 200%;
-	right: 40%;
-	background: #999;
-	border: 2px solid;
-	text-align: center;
+span a{
+	padding: 1px;
+	color: black;
 }
 .addnews{
 	text-align: center;
@@ -61,12 +54,12 @@ body {
 	left: 30%
 }
 .edit_news{
-	text-align: center;
-	height: 250px;
-	width: 400px;
 	position: absolute;
 	top: 80%;
-	left: 30%
+	left: 30%;
+	width: 400px;
+	height: 250px;
+	text-align: center;
 }
 a{
 	padding: 10px;
@@ -87,7 +80,51 @@ span h4{
 	margin: 0;
   padding: 0;
 }
-li {
+.pager li {
     list-style-type: none;
     display: inline;
    }
+.menu a{
+	padding: 3px;
+	text-decoration: none;
+	color: #000000;
+	text-transform: uppercase;
+}
+#lang {
+ 	margin: 0px auto;
+	float: right;
+}
+#lang form {
+	display: inline;
+ }
+ .ua{
+	background: transparent url(i/ua.png) no-repeat center top;
+	border: 0;
+	margin: 0;
+	padding:0;
+	width: 16px;
+	height: 11px;
+	text-indent: -1000em;
+	cursor: pointer;
+	cursor: hand;
+ }
+ .en{
+ 	background: transparent url(i/us.png) no-repeat center top;
+	border: 0;
+	margin: 0;
+	padding:0;
+	width: 16px;
+	height: 11px;
+	text-indent: -1000em;
+	cursor: pointer;
+	cursor: hand;
+ }
+ .paut{
+ 	display: inline-block;
+ }
+.error-msg{
+	color: red;
+}
+.error{
+	border-color: red;
+}

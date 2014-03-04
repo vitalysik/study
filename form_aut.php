@@ -8,9 +8,13 @@ if (isset($_POST['submit'])) {
   $query->execute();
   $user = $query->fetchObject();
   if (!empty($user) && $user->login == $login) {
+    $query = $db->prepare("UPDATE `users` SET `access` = :access WHERE `uid` = :uid");
+    $query->bindParam(':access', date('Y-m-d H:i:s'));
+    $query->bindParam(':uid', $user->uid);
+    $query->execute();
     $_SESSION['user'] = $user;
   }
   else {
-   echo "Error";
+   echo 'Error. Please log-in again.';
   }
 }

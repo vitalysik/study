@@ -1,9 +1,9 @@
 <?php
 include("bd.php");
-$uid = $_GET['uid'];
+$uid = $_POST['uid'];
 if (!empty($_POST['update'])){
-  $name = strip_tags($_POST['name']);
-  $sename = strip_tags($_POST['sename']);
+  $name = htmlspecialchars($_POST['name']);
+  $sename = htmlspecialchars($_POST['sename']);
   $is_error = FALSE;
   if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
     $is_error = TRUE;
@@ -42,6 +42,20 @@ if (!empty($_POST['update'])){
     $res->bindParam(':email',$email);
     $res->bindParam(':uid',$uid);
     $res->execute();
+    if (!empty($_POST['role'])){
+      $r = $db->prepare("UPDATE users SET rid = :rid WHERE uid = :uid");
+      $r->bindParam(':rid', $_POST['role']);
+      $r->bindParam(':uid', $uid);
+      $r->execute();
+    }
   }
-  header("Location: profile.php?id={$uid}");
+  header("Location: user.php?id={$uid}");
+}
+elseif (!empty($_POST['delete'])){
+  $del = $db->prepare("DELETE FROM `users` WHERE uid = :uid");
+  $del->bindParam(':uid',$uid);
+  $del->execute();
+  if ($del){
+    header("Location: index.php");
+  }
 }
